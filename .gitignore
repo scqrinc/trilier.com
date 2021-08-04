@@ -1,0 +1,13 @@
+
+/.env
+
+/**/.git
+/**/node_modules
+/**/*.rs.bk
+/**/target
+/**/dist
+
+/wasm/Cargo.lock
+/wasm/bin/
+/wasm/pkg/
+/wasm/wasm-pack.log
