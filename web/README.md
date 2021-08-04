@@ -1,3 +1,12 @@
+
+<p>
+This is based on <a href="https://github.com/rustwasm/create-wasm-app">create-wasm-app</a>.
+</p>
+
+<hr>
+
+<p>(below is given by create-wasm-app by default)</p>
+
 <div align="center">
 
   <h1><code>create-wasm-app</code></h1>
