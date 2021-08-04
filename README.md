@@ -1,18 +1,19 @@
 
 # trilier.com server
 
-**Tr**anslation Ate**lier**
+**Tr**ans**l**ation Ate**lier**
 
 ## how to dev
 
-add `.env` file to the root directory and set `TRANSLATE_API_KEY` in it:
+`.env` file which has `TRANSLATE_API_KEY` defintion is required in root directory.
+`scripts/install.sh` generates it automatically.
 
 ```config
-# /.env
+# .env
 TRANSLATE_API_KEY = (set key here)
 ```
 
-execute scripts files in root dir
+Execute scripts files in root dir:
 
 ```console
 $ # install
