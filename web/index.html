@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilier</title>
+</head>
+<body>
+	<noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+    <script src="/bootstrap.js"></script>
+
+    <div id="app">
+        <header>
+			<h1>Trilier</h1>
+		</header>
+        <main>
+			<h2>Condition</h2>
+            <form method="GET" action="">
+				<input type="text" name="q" maxlength="30" placeholder="Word?" required>
+				<div class="langs">
+					<div class="lang src">
+						<label>From</label>
+						<select name="src-lang"></select>
+					</div>
+					<div class="lang dst">
+						<label>To</label>
+						<select name="dst-langs[]" multiple required></select>
+					</div>
+				</div>
+				<input type="submit" value="Search" />
+			</form>
+			<h2>Result</h2>
+			<template id="ret-tmpl">
+				<div class="src-lang"></div>
+				<div class="dst-lang"></div>
+				<div class="translated-text"></div>
+				<a class="detail-link" href="https://www.google.com/search?" target="_blank" rel="noopener noreferrer">Detail</a>
+			</template>
+			<div class="ret"></div>
+        </main>
+        <footer>
+			<div>
+				Powered by
+				<a href="" target="_blank" rel="noopener noreferrer">Rust</a>
+				+
+				<a href="" target="_blank" rel="noopener noreferrer">Actix</a>
+				+
+				<a href="" target="_blank" rel="noopener noreferrer">WebAssembly</a>
+			</div>
+			<div>
+				Developed by
+				<a href="https://www.scqr.net/" target="_blank" rel="noopener noreferrer">Scqr Inc.</a>
+				&copy; <span class="copyright-year"></span>
+			</div>
+		</footer>
+    </div>
+</body>
+</html>
