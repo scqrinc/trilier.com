@@ -6,7 +6,7 @@
 ## how to dev
 
 `.env` file which has `TRANSLATE_API_KEY` defintion is required in root directory.
-`scripts/install.sh` generates it automatically.
+`dev-scripts/install.sh` generates it automatically.
 
 ```config
 # .env
@@ -17,11 +17,11 @@ Execute scripts files in root dir:
 
 ```console
 $ # install
-$ sh scripts/install.sh
+$ sh dev-scripts/install.sh
 
 $ # build server / wasm for client / client
-$ sh scripts/build.sh
+$ sh dev-scripts/build.sh
 
 $ # run server
-$ sh scripts/run-server.sh
+$ sh dev-scripts/run-server.sh
 ```

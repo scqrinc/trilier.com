@@ -10,7 +10,7 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Result};
 
 mod env;
 
-const DOCUMENT_ROOT_DIR: &str = "./web/dist";
+const DOCUMENT_ROOT_DIR: &str = "./app-web/dist";
 
 async fn search(params: web::Json<env::SearchParams>) -> Result<HttpResponse> {
     let translate_api_key =

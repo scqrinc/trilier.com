@@ -10,7 +10,7 @@ import (
 
 func main() {
 	http.HandleFunc("/api/search", HandleSearch)
-	fs := http.FileServer(http.Dir("./web/dist"))
+	fs := http.FileServer(http.Dir("./app-web/dist"))
 	http.Handle("/", fs)
 	fmt.Println("Server started at port 8000")
 	http.ListenAndServe("localhost:8000", nil)

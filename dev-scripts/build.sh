@@ -1,9 +1,9 @@
 
-cd wasm
+cd app-wasm
 wasm-pack build
 cd ..
 
-cd web
+cd app-web
 npm run build
 cd ..
 
