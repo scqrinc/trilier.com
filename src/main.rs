@@ -1,41 +1,72 @@
 use std::path::{Path, PathBuf};
 
 use dotenv;
-
 use serde_json::Value;
 
-use actix_files::NamedFile;
-use actix_web::client::Client;
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Result};
+use actix_files::NamedFile;
+
+use actix_web::client::Client;
 
 mod env;
 
 const DOCUMENT_ROOT_DIR: &str = "./app-web/dist";
 
+const TRANSLATE_API_URL: &str = "https://api-free.deepl.com/v2/translate";
+
 async fn search(params: web::Json<env::SearchParams>) -> Result<HttpResponse> {
     let translate_api_key =
         dotenv::var("TRANSLATE_API_KEY").expect("TRANSLATE_API_KEY must be set.");
-    // todo: sanitize src_lang / keywords ?
-    let url_tmpl = format!(
-        "https://www.googleapis.com/language/translate/v2?key={}&q={}&source={}&target=",
-        translate_api_key, params.keywords, params.src_lang
-    );
+    // todo: sanitize src_lang / original_text ?
 
     let mut results = Vec::new();
     for dst_lang in &params.dst_langs {
-        // todo: sanitize dst_lang ?
-        let url = format!("{}{}", url_tmpl, dst_lang);
-        let result = query_translate(&params.src_lang, dst_lang, &url).await;
+        let result = query_translate(&params.original_text, &params.src_lang, dst_lang, translate_api_key.as_ref()).await;
         results.push(result);
     }
     let search_results = env::SearchResults { results: results };
     Ok(HttpResponse::Ok().json(search_results))
 }
-async fn query_translate(src_lang: &str, dst_lang: &str, url: &str) -> env::SearchResult {
+async fn query_translate(original_text: &str, src_lang: &str, dst_lang: &str, translate_api_key: &str) -> env::SearchResult {
+    // let params = [
+    //     ("auth_key", translate_api_key),
+    //     ("text", original_text),
+    //     ("source_lang", src_lang),
+    //     ("target_lang", dst_lang)
+    // ];
+    let params = format!("auth_key={}&text={}&source_lang={}&target_lang={}",
+        translate_api_key,
+        original_text,
+        src_lang,
+        dst_lang
+    );
+    // let params = serde_json::json!({
+    //     "auth_key": translate_api_key,
+    //     "text": original_text,
+    //     "source_lang": src_lang,
+    //     "target_lang": dst_lang,
+    // });
     let client = Client::default();
-    let mut resp = client.get(url).send().await.unwrap();
+    let req = client
+        .post(TRANSLATE_API_URL)
+        // .set(actix_web::http::header::ContentType::form_url_encoded())
+        // .set(actix_web::http::header::ContentType::json())
+        ;
+    println!("{},{},{},{},{},{:?},{:?}",
+        translate_api_key, original_text, src_lang, dst_lang, TRANSLATE_API_URL,
+        req, params);
+    // let resp = req.send_form(&params).await;
+    // let resp = req.send_json(&params).await;
+    let resp = req.send_body(&params).await;
 
-    let resp_body_bytes = resp.body().await.unwrap();
+    match resp {
+        Ok(_) => {},
+        Err(error) => {
+            panic!("Server error: {}", error);
+        },
+    }
+
+    let resp_body_bytes = resp.unwrap().body().await.unwrap();
     let resp_body_str = std::str::from_utf8(resp_body_bytes.as_ref()).unwrap();
     let resp_body_json: Value = serde_json::from_str(resp_body_str).unwrap();
 
@@ -51,14 +82,12 @@ async fn query_translate(src_lang: &str, dst_lang: &str, url: &str) -> env::Sear
     }
 
     let translation = resp_body_json
-        .get("data")
-        .unwrap()
         .get("translations")
         .unwrap()
         .get(0)
         .unwrap();
-    let translated_text = translation.get("translatedText").unwrap().as_str().unwrap();
-    let detected_src_lang = match translation.get("detectedSourceLanguage") {
+    let translated_text = translation.get("text").unwrap().as_str().unwrap();
+    let detected_src_lang = match translation.get("detected_source_language") {
         Some(x) => x.as_str().unwrap(),
         None => src_lang,
     };
@@ -67,6 +96,12 @@ async fn query_translate(src_lang: &str, dst_lang: &str, url: &str) -> env::Sear
         dst_lang: dst_lang.to_string(),
         translated_text: translated_text.to_string(),
     }
+
+    // env::SearchResult {
+    //     src_lang: "".to_string(),
+    //     dst_lang: "".to_string(),
+    //     translated_text: "".to_string(),
+    // }
 }
 
 async fn index(_req: HttpRequest) -> Result<NamedFile> {

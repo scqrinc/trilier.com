@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SearchParams {
-    pub keywords: String,
+    pub original_text: String,
     pub src_lang: String,
     pub dst_langs: Vec<String>,
 }

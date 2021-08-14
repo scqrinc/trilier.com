@@ -163,7 +163,7 @@ pub async fn form_submit(e: Event) -> Result<(), JsValue> {
 }
 
 fn get_req_body(form: HtmlFormElement) -> js_sys::JsString {
-    let keywords = form
+    let original_text = form
         .query_selector("input[name=\"q\"]")
         .expect(QUERY_SELECTOR_ERR)
         .unwrap()
@@ -186,7 +186,7 @@ fn get_req_body(form: HtmlFormElement) -> js_sys::JsString {
         dst_langs.push(dst_lang_elm.get_attribute("value").unwrap());
     }
     let req_json = json!(env::SearchParams {
-        keywords: keywords.to_string(),
+        original_text: original_text.to_string(),
         src_lang: src_lang.to_string(),
         dst_langs: dst_langs,
     });
