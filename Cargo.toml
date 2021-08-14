@@ -13,9 +13,9 @@ license = "ISC"
 
 [dependencies]
 dotenv = "*"
-actix-web = { version = "3", features = ["rustls"] }
+actix-web = "3"
+curl = "*"
 actix-files = "*"
-rustls = "*"
 serde = { version = "*", features = ["derive"] }
 serde_derive = "*"
 serde_json = "*"
